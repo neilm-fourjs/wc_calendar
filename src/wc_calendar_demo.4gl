@@ -13,10 +13,9 @@ MAIN
 	OPEN FORM f1 FROM "wc_calendar_demo"
 	DISPLAY FORM f1
 
+-- Is the WC debug feature enabled?
 	CALL ui.Interface.frontCall("standard","getenv",["QTWEBENGINE_REMOTE_DEBUGGING"],l_debug)
 	DISPLAY "DEBUG:",l_debug
-
-	CALL lib.add_presentation_styles()
 
 	LET m_selected_date = TODAY
 	CALL calendar.return_date(FUNCTION set_date)

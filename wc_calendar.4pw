@@ -63,7 +63,7 @@
   </Settings>
   <LanguageList version="1.0"/>
   <PlatformList version="1.0"/>
-  <Group environment="value:FGLRESOURCEPATH=../etc,value:FGLIMAGEPATH=..:$(FGLDIR)/lib/image2font.txt" label="calendar" language="Genero">
+  <Group environment="value:LANG=en_GB.utf-8,value:FGLRESOURCEPATH=../etc,value:FGLIMAGEPATH=..:$(FGLDIR)/lib/image2font.txt" label="calendar" language="Genero">
     <Library binaryName="calendar" id="1780538924" label="calendar">
       <File filePath="src/calendar.4gl"/>
       <File filePath="src/calendar.per"/>

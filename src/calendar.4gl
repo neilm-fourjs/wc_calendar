@@ -37,7 +37,7 @@ end function
 PUBLIC FUNCTION hefja(d date) -- Start
 
   IF d IS NULL THEN LET d = TODAY END IF
-  CALL lib.add_presentation_styles()
+
   CALL fglcalendar.initialize()
   LET cid = fglcalendar.create("formonly.calendar")
   CALL set_type(cid, FGLCALENDAR_TYPE_DEFAULT)
@@ -52,7 +52,6 @@ PUBLIC FUNCTION hefja(d date) -- Start
   CALL ui.Interface.Refresh()
   CALL fglcalendar.addSelectedDate(cid, d)
   CALL fglcalendar.display(cid, rec.curr_year, rec.curr_month)
-
 
 END FUNCTION
 --------------------------------------------------------------------------------
