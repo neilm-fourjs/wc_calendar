@@ -120,6 +120,15 @@ function setProps()
 	}
 }
 
+function send_action(l_action)
+{
+	if (!has_focus) {
+		clicked = true;
+		gICAPI.SetFocus();
+	}
+	gICAPI.Action(l_action);
+}
+
 function getBBox(id) {
 	try {
 		var n = document.getElementById(id);
@@ -225,7 +234,7 @@ elem_mouse_out = function(element) {
 <body>
 
 <div align="center">
-<button onclick="gICAPI.Action('prevmonth')"><i class="fa fa-arrow-circle-left" style="font-size:1.5em;"></i></button>
+<button onclick="send_action('prevmonth')"><i class="fa fa-arrow-circle-left" style="font-size:1.5em;"></i></button>
 <select id="disp_month" name="month" style="font-size:1.5em;" onchange="setProps()">
 	<option value="1">Janúar</option>
 	<option value="2">Febrúar</option>
@@ -241,7 +250,7 @@ elem_mouse_out = function(element) {
 	<option value="12">Desember</option>
 </select>
 <input id="disp_year" type="number" min="1900" max="3000" step="1" value ="1900" style="font-size:1.5em;" onchange="setProps()"/>
-<button onclick="gICAPI.Action('nextmonth')"><i class="fa fa-arrow-circle-right" style="font-size:1.5em;"></i></button>
+<button onclick="send_action('nextmonth')"><i class="fa fa-arrow-circle-right" style="font-size:1.5em;"></i></button>
 </div>
 
 <div id="svg_container"></div>
