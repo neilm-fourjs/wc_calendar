@@ -19,7 +19,7 @@ MAIN
 
 	LET m_selected_date = TODAY
 	CALL calendar.return_date(FUNCTION set_date)
-	CALL calendar.hefja( m_selected_date ) -- Start
+	CALL calendar.init( m_selected_date ) -- Start
 	DIALOG ATTRIBUTES(UNBUFFERED)
 
 		INPUT BY NAME m_selected_date ATTRIBUTES(WITHOUT DEFAULTS)
@@ -30,7 +30,7 @@ MAIN
 		ON ACTION cancel EXIT DIALOG
 		ON ACTION close EXIT DIALOG
 	END DIALOG 
-	CALL calendar.ljuka() -- Complete
+	CALL calendar.finish() -- Complete
 
 END MAIN
 --------------------------------------------------------------------------------

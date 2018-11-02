@@ -64,15 +64,15 @@
   <LanguageList version="1.0"/>
   <PlatformList version="1.0"/>
   <Group environment="value:LANG=en_GB.utf-8,value:FGLRESOURCEPATH=../etc,value:FGLIMAGEPATH=..:$(FGLDIR)/lib/image2font.txt" label="calendar" language="Genero">
-    <Library binaryName="calendar" id="1780538924" label="calendar">
+    <Library binaryName="calendar" dependencies="-233137040" id="1780538924" label="calendar">
       <File filePath="src/calendar.4gl"/>
       <File filePath="src/calendar.per"/>
+      <File filePath="src/calendar_lib.4gl"/>
       <File filePath="src/fglcalendar.4gl"/>
       <File filePath="src/is_dagatal.4gl"/>
     </Library>
-    <Library binaryName="lib" id="-233137040" label="lib">
+    <Library binaryName="etc" id="-233137040" label="etc">
       <File filePath="etc/default.4ad"/>
-      <File filePath="src/lib.4gl"/>
     </Library>
     <Application binaryName="wc_calendar_demo" dependencies="1780538924,-233137040" id="-1099710866" label="wc_calendar_demo">
       <File filePath="src/wc_calendar_demo.4gl"/>

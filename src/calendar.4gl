@@ -1,7 +1,6 @@
 IMPORT util
 IMPORT FGL fglcalendar
 IMPORT FGL is_dagatal
-IMPORT FGL lib
 
 PUBLIC DEFINE rec record
   curr_month smallint,
@@ -26,17 +25,17 @@ private define curdate date, cid int
 #+ CALL return_date (function my_getdate) 
 #
 
-public function return_date(f cb_set_date)
+FUNCTION return_date(f cb_set_date)
   LET cb_sdate = f
-end function
-
-public function setTexts(dic dictionary of string)
+END FUNCTION  
+--------------------------------------------------------------------------------
+FUNCTION setTexts(dic dictionary of string)
   CALL fglcalendar.setText(dic)
-end function
+END FUNCTION  
+--------------------------------------------------------------------------------
+FUNCTION init(l_date DATE) -- Start
 
-PUBLIC FUNCTION hefja(d date) -- Start
-
-  IF d IS NULL THEN LET d = TODAY END IF
+  IF l_date IS NULL THEN LET l_date = TODAY END IF
 
   CALL fglcalendar.initialize()
   LET cid = fglcalendar.create("formonly.calendar")
@@ -45,17 +44,17 @@ PUBLIC FUNCTION hefja(d date) -- Start
   CALL fglcalendar.showDayNames(cid, true)
   CALL fglcalendar.showDayNumbers(cid, true)
   CALL fglcalendar.showweekNumbers(cid, false)
-  LET rec.curr_year = year(d)
-  LET rec.curr_month = month(d)
-  LET selected_date = d
-  LET curdate = d
+  LET rec.curr_year = YEAR(l_date)
+  LET rec.curr_month = MONTH(l_date)
+  LET selected_date = l_date
+  LET curdate = l_date
   CALL ui.Interface.Refresh()
-  CALL fglcalendar.addSelectedDate(cid, d)
+  CALL fglcalendar.addSelectedDate(cid, l_date)
   CALL fglcalendar.display(cid, rec.curr_year, rec.curr_month)
 
 END FUNCTION
 --------------------------------------------------------------------------------
-PUBLIC DIALOG calendar()
+DIALOG calendar()
 
 	INPUT BY NAME rec.* ATTRIBUTES(WITHOUT DEFAULTS)
 		ON CHANGE curr_year 
@@ -111,17 +110,16 @@ PUBLIC DIALOG calendar()
 
 END DIALOG
 --------------------------------------------------------------------------------
-public function ljuka()
+FUNCTION finish()
 	CALL fglcalendar.destroy(cid)
 	CALL fglcalendar.finalize()
-end function  
+END FUNCTION  
 --------------------------------------------------------------------------------
-private function set_type(c_id, type)
-	define c_id, type smallint
+PRIVATE FUNCTION set_type(c_id SMALLINT, type SMALLINT)
 	CALL fglcalendar.setViewType(c_id, type)
-	if  type == FGLCALENDAR_TYPE_DEFAULT THEN
+{	IF  type = FGLCALENDAR_TYPE_DEFAULT THEN
 		CALL fglcalendar.setDayNames(cid, "Mán|Þri|Mið|Fim|Fös|Lau|Sun")
-	else
+	ELSE
 		CALL fglcalendar.setDayNames(cid, "M|Þ|M|F|F|L|S")
-	end if
-end function
+	END IF}
+END FUNCTION
