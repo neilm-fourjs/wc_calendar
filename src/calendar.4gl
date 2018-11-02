@@ -1,6 +1,5 @@
 IMPORT util
 IMPORT FGL fglcalendar
-IMPORT FGL is_dagatal
 
 PUBLIC DEFINE rec record
   curr_month smallint,
@@ -10,33 +9,25 @@ END RECORD
 
 PUBLIC TYPE cb_set_date FUNCTION(l_dte DATE)
 
-private define cb_sdate cb_set_date
+PRIVATE DEFINE cb_sdate cb_set_date
+PRIVATE DEFINE curdate DATE, cid INTEGER
 
-public define selected_date date
-public define dag_textar dictionary of string
+PUBLIC DEFINE selected_date DATE
+PUBLIC DEFINE dag_textar DICTIONARY OF STRING
 
-private define curdate date, cid int
-
-#
-#! return date
+--------------------------------------------------------------------------------
 #+ Callback function for returning the selected date
 #+
 #+ @code
 #+ CALL return_date (function my_getdate) 
-#
-
-FUNCTION return_date(f cb_set_date)
-  LET cb_sdate = f
-END FUNCTION  
---------------------------------------------------------------------------------
-FUNCTION setTexts(dic dictionary of string)
-  CALL fglcalendar.setText(dic)
-END FUNCTION  
---------------------------------------------------------------------------------
-FUNCTION init(l_date DATE) -- Start
+#+
+#+ @param l_date The start date
+#+ @param l_setDateCallBack Function for the callback
+FUNCTION init(l_date DATE, l_setDateCallBack cb_set_date) -- Start
 
   IF l_date IS NULL THEN LET l_date = TODAY END IF
 
+  LET cb_sdate = l_setDateCallBack
   CALL fglcalendar.initialize()
   LET cid = fglcalendar.create("formonly.calendar")
   CALL set_type(cid, FGLCALENDAR_TYPE_DEFAULT)
@@ -54,6 +45,7 @@ FUNCTION init(l_date DATE) -- Start
 
 END FUNCTION
 --------------------------------------------------------------------------------
+#+ The calendar subdialog input.
 DIALOG calendar()
 
 	INPUT BY NAME rec.* ATTRIBUTES(WITHOUT DEFAULTS)
@@ -61,54 +53,56 @@ DIALOG calendar()
 			CALL fglcalendar.display(cid, rec.curr_year, rec.curr_month)
 
 		ON CHANGE curr_month
-			if rec.curr_month == 0 then
-				LET rec.curr_year = rec.curr_year-1
+			IF rec.curr_month < 1 THEN
+				LET rec.curr_year = rec.curr_year - 1
 				LET rec.curr_month = 12
-			end if
-			if rec.curr_month == 13 then
-				LET rec.curr_year = rec.curr_year+1
+			END IF
+			if rec.curr_month > 12 THEN
+				LET rec.curr_year = rec.curr_year + 1
 				LET rec.curr_month = 1
-			end if
+			END IF
 			CALL fglcalendar.display(cid, rec.curr_year, rec.curr_month)
 		--	CALL DIALOG.nextField("xxx")
 
 		ON ACTION prevmonth
 			DISPLAY "PrevMonth"
-			if rec.curr_month == 1 then
+			IF rec.curr_month = 1 THEN
 				LET rec.curr_year = rec.curr_year-1
 				LET rec.curr_month = 12
-			else
+			ELSE
 				LET rec.curr_month = rec.curr_month - 1
-			end if
+			END IF
 			CALL fglcalendar.display(cid, rec.curr_year, rec.curr_month)
 
 		ON ACTION nextmonth
 			DISPLAY "NextMonth"
-			if rec.curr_month == 12 then
+			IF rec.curr_month = 12 THEN
 				LET rec.curr_year = rec.curr_year+1
 				LET rec.curr_month = 1
-			else
+			ELSE
 				LET rec.curr_month = rec.curr_month + 1
-			end if
+			END IF
 			CALL fglcalendar.display(cid, rec.curr_year, rec.curr_month)
 
 		ON ACTION calendar_selection
 			LET selected_date = fglcalendar.getSelectedDateFromValue(cid, rec.calendar)
 			DISPLAY "SELECTED_DATE=",selected_date
-			if selected_date != curdate then
+			IF selected_date != curdate THEN
 				CALL fglcalendar.removeSelectedDate(cid, curdate)
-				LET rec.curr_month = month(selected_date)
-				LET rec.curr_year = year(selected_date)
+				LET rec.curr_month = MONTH(selected_date)
+				LET rec.curr_year = YEAR(selected_date)
 				CALL fglcalendar.addSelectedDate(cid, selected_date)
 				LET curdate = selected_date
 				CALL fglcalendar.display(cid, rec.curr_year, rec.curr_month)
-				if cb_sdate is not null then
-					CALL cb_sdate(curdate)
-				end if
-			end if
+				IF cb_sdate IS NOT NULL THEN CALL cb_sdate(curdate) END IF
+			END IF
 	END INPUT
 
 END DIALOG
+--------------------------------------------------------------------------------
+FUNCTION setTexts(dic dictionary of string)
+  CALL fglcalendar.setText(dic)
+END FUNCTION  
 --------------------------------------------------------------------------------
 FUNCTION finish()
 	CALL fglcalendar.destroy(cid)
