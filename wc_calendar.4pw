@@ -69,7 +69,6 @@
       <File filePath="src/calendar.per"/>
       <File filePath="src/calendar_lib.4gl"/>
       <File filePath="src/fglcalendar.4gl"/>
-      <File filePath="src/is_dagatal.4gl"/>
     </Library>
     <Library binaryName="etc" id="-233137040" label="etc">
       <File filePath="etc/default.4ad"/>

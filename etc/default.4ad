@@ -3,8 +3,9 @@
 	<ActionDefault name="calendar_selection" text="eh!" defaultView="no" contextMenu="no" />
 	<ActionDefault name="prevmonth" text="eh!" defaultView="no" contextMenu="no" />
 	<ActionDefault name="nextmonth" text="eh!" defaultView="no" contextMenu="no" />
+	<ActionDefault name="wc_debug" text="WC Debug" image="fa-bug" defaultView="yes" contextMenu="no" />
 
-  <ActionDefault name="accept" image="accept" text="OK" acceleratorName="Return" acceleratorName2="Enter" contextMenu="no"/>
+  <ActionDefault name="accept" image="accept" text="Accept" acceleratorName="Return" acceleratorName2="Enter" contextMenu="no"/>
   <ActionDefault name="cancel" validate="no" image="cancel" text="Cancel" acceleratorName="Escape" contextMenu="no"/>
   <ActionDefault name="insert" text="Insert" acceleratorName="F3" contextMenu="no"/>
   <ActionDefault name="append" text="Append" acceleratorName="Control-F3" contextMenu="no"/>

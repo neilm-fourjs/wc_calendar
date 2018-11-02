@@ -7,14 +7,13 @@ PUBLIC DEFINE rec record
   calendar string
 END RECORD
 
-PUBLIC TYPE cb_set_date FUNCTION(l_dte DATE)
-
-PRIVATE DEFINE cb_sdate cb_set_date
-PRIVATE DEFINE curdate DATE, cid INTEGER
-
+PUBLIC TYPE t_cb_set_date FUNCTION(l_dte DATE)
 PUBLIC DEFINE selected_date DATE
 PUBLIC DEFINE dag_textar DICTIONARY OF STRING
 
+PRIVATE DEFINE cb_sdate t_cb_set_date
+PRIVATE DEFINE curdate DATE, cid INTEGER
+PRIVATE DEFINE m_lang CHAR(2)
 --------------------------------------------------------------------------------
 #+ Callback function for returning the selected date
 #+
@@ -23,11 +22,14 @@ PUBLIC DEFINE dag_textar DICTIONARY OF STRING
 #+
 #+ @param l_date The start date
 #+ @param l_setDateCallBack Function for the callback
-FUNCTION init(l_date DATE, l_setDateCallBack cb_set_date) -- Start
+#+ @oaram l_lang EN or IS
+FUNCTION init(l_date DATE, l_setDateCallBack t_cb_set_date, l_lang CHAR(2)) -- Start
 
   IF l_date IS NULL THEN LET l_date = TODAY END IF
 
+	LET m_lang = NVL(l_lang,"EN")
   LET cb_sdate = l_setDateCallBack
+	LET fglcalendar.m_isHoliday = FUNCTION isHoliday -- call back for holiday tests
   CALL fglcalendar.initialize()
   LET cid = fglcalendar.create("formonly.calendar")
   CALL set_type(cid, FGLCALENDAR_TYPE_DEFAULT)
@@ -111,9 +113,28 @@ END FUNCTION
 --------------------------------------------------------------------------------
 PRIVATE FUNCTION set_type(c_id SMALLINT, type SMALLINT)
 	CALL fglcalendar.setViewType(c_id, type)
-{	IF  type = FGLCALENDAR_TYPE_DEFAULT THEN
-		CALL fglcalendar.setDayNames(cid, "Mán|Þri|Mið|Fim|Fös|Lau|Sun")
+	CASE m_lang
+		WHEN "IS"
+			IF  type = FGLCALENDAR_TYPE_DEFAULT THEN
+				CALL fglcalendar.setDayNames(cid, "Mán|Þri|Mið|Fim|Fös|Lau|Sun")
+			ELSE
+				CALL fglcalendar.setDayNames(cid, "M|Þ|M|F|F|L|S")
+			END IF
+			CALL fglcalendar.setMonthNames(cid, "Janúar|Febrúar|Mars|Apríl|Maí|Júní|Júlí|Agúst|September|Október|Nóvember|Desember")
+
+	END CASE
+END FUNCTION
+--------------------------------------------------------------------------------
+FUNCTION isHoliday(l_dte DATE) RETURNS ( BOOLEAN, STRING )
+	DEFINE l_txt STRING
+
+	IF MONTH( l_dte ) = 12 AND DAY( l_dte ) = 25 THEN
+		LET l_txt = "XMas"
+	END IF
+
+	IF l_txt IS NOT NULL THEN
+		RETURN TRUE, l_txt
 	ELSE
-		CALL fglcalendar.setDayNames(cid, "M|Þ|M|F|F|L|S")
-	END IF}
+		RETURN FALSE, NULL
+	END IF
 END FUNCTION

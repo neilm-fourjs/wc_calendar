@@ -5,8 +5,9 @@
 
 IMPORT util
 IMPORT FGL fglsvgcanvas
-IMPORT FGL is_dagatal
 IMPORT FGL calendar_lib
+
+PUBLIC TYPE t_isHoliday FUNCTION(l_dte DATE) RETURNS (BOOLEAN, STRING)
 
 PUBLIC CONSTANT FGLCALENDAR_TYPE_DEFAULT = 1
 PUBLIC CONSTANT FGLCALENDAR_TYPE_ICON		= 2
@@ -27,6 +28,7 @@ PRIVATE TYPE t_calendar RECORD
 							color_theme SMALLINT,
 							draw_attr DYNAMIC ARRAY OF SMALLINT,
 							day_names DYNAMIC ARRAY OF STRING,
+							month_names DYNAMIC ARRAY OF STRING,
 							day_cell_color STRING,
 							daycur_cell_color STRING,
 							dayout_cell_color STRING,
@@ -52,6 +54,9 @@ PRIVATE CONSTANT CAL_GRID_DAYS	SMALLINT = 7,
 								CAL_GRID_WEEKS SMALLINT = 6
 
 PRIVATE DEFINE m_wc_node om.DomNode
+PRIVATE DEFINE m_month_combo BOOLEAN
+
+PUBLIC DEFINE m_isHoliday t_isHoliday
 
 DEFINE textar DICTIONARY OF STRING
 #+ Library initialization function.
@@ -399,6 +404,30 @@ PUBLIC FUNCTION setDayNames(id SMALLINT, l_names STRING)
 	LET x=0
 	WHILE tok.hasMoreTokens()
 		LET calendars[id].day_names[x:=x+1] = tok.nextToken()
+	END WHILE
+END FUNCTION
+--------------------------------------------------------------------------------
+#+ Defines the names for the months (for localization).
+#+
+#+ By default, texts are in English, using this function to define
+#+ localized day names, in the character set of your choice.
+#+ The list of day names must be provided as string contained a
+#+ comma-separated names.
+#+
+#+ @code
+#+ CALL setMonthNames(id, "Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec")
+#+
+#+ @param id		The calendar id
+#+ @param names The list of month names
+#+
+PUBLIC FUNCTION setMonthNames(id SMALLINT, l_names STRING)
+	DEFINE tok base.StringTokenizer
+	DEFINE x INTEGER
+	CALL _check_id(id)
+	LET tok = base.StringTokenizer.create(l_names,"|")
+	LET x=0
+	WHILE tok.hasMoreTokens()
+		LET calendars[id].month_names[x:=x+1] = tok.nextToken()
 	END WHILE
 END FUNCTION
 --------------------------------------------------------------------------------
@@ -783,6 +812,7 @@ END FUNCTION
 #+
 FUNCTION display(id SMALLINT, cy SMALLINT, cm SMALLINT)
 	CALL _check_id(id)
+	CALL _setMonthCombo(id)
 	CALL _draw_calendar(id, cy, cm)
 	CALL wc_setProp(id, "year", cy )
 	CALL wc_setProp(id, "month", cm )
@@ -943,10 +973,10 @@ PRIVATE FUNCTION _draw_calendar_grid(id, root_svg, view_year, view_month)
 			ELSE
 				LET dayn_class = "grid_day_num"
 				LET cell_class = "grid_cell"
-				let is_dagatal.DES_24_FRI = true
-				let is_dagatal.DES_31_FRI = true
-				call is_dagatal.dag_texti(day_date, false) returning day_off, day_hover
-				IF gcol > 5 or day_off THEN
+				IF m_isHoliday IS NOT NULL THEN
+					CALL m_isHoliday( day_date ) RETURNING day_off, day_hover
+				END IF
+				IF gcol > 5 OR day_off THEN
 					LET cell_class = "grid_cell_off"
 				END IF
 			END IF
@@ -962,12 +992,12 @@ PRIVATE FUNCTION _draw_calendar_grid(id, root_svg, view_year, view_month)
 
 			IF calendars[id].show_today AND day_date = TODAY THEN
 				CASE
-					WHEN calendars[id].cal_type==FGLCALENDAR_TYPE_DEFAULT
+					WHEN calendars[id].cal_type = FGLCALENDAR_TYPE_DEFAULT
 					#		LET n = fglsvgcanvas.rect( tx, ty, 8, 8, NULL, NULL )
 					#		CALL n.setAttribute(SVGATT_CLASS,"grid_cell_today")
 					#		CALL cells.appendChild(n)
-					WHEN calendars[id].cal_type==FGLCALENDAR_TYPE_TEXT
-					OR calendars[id].cal_type==FGLCALENDAR_TYPE_DOTS
+					WHEN calendars[id].cal_type = FGLCALENDAR_TYPE_TEXT
+					OR calendars[id].cal_type = FGLCALENDAR_TYPE_DOTS
 						LET r = (sx/2)
 						LET n = fglsvgcanvas.circle( tx+r, ty+r, (sx*0.45) )
 						CALL n.setAttribute(SVGATT_CLASS,"grid_cell_today")
@@ -977,7 +1007,7 @@ PRIVATE FUNCTION _draw_calendar_grid(id, root_svg, view_year, view_month)
 
 			IF cell_class IS NOT NULL THEN
 				IF calendars[id].show_daynums
-				AND calendars[id].cal_type!=FGLCALENDAR_TYPE_ICON THEN
+				AND calendars[id].cal_type != FGLCALENDAR_TYPE_ICON THEN
 					LET t = fglsvgcanvas.text(
 								tx + text_x_offset,
 								ty + text_y_offset,
@@ -1004,7 +1034,7 @@ PRIVATE FUNCTION _draw_calendar_grid(id, root_svg, view_year, view_month)
 					END IF
 				END IF
 
-				IF sd AND calendars[id].cal_type==FGLCALENDAR_TYPE_DOTS THEN
+				IF sd AND calendars[id].cal_type = FGLCALENDAR_TYPE_DOTS THEN
 					LET n = fglsvgcanvas.circle( tx+(sx/2), ty+(sy*0.8), 2 )
 					CALL decos.appendChild(n)
 				END IF
@@ -1027,8 +1057,8 @@ PRIVATE FUNCTION _draw_calendar_grid(id, root_svg, view_year, view_month)
 					CALL cells.appendChild(n)
 				END IF
 
-				IF calendars[id].show_today AND day_date==TODAY
-				AND calendars[id].cal_type==FGLCALENDAR_TYPE_ICON THEN
+				IF calendars[id].show_today AND day_date = TODAY
+				AND calendars[id].cal_type = FGLCALENDAR_TYPE_ICON THEN
 					LET n = fglsvgcanvas.path( -- Triangle...
 								SFMT("M%1 %2 L%3 %4 L%5 %6 Z",
 											isodec(tx)	, isodec(ty)	,
@@ -1055,7 +1085,25 @@ PRIVATE FUNCTION _draw_calendar_grid(id, root_svg, view_year, view_month)
 #DISPLAY root_svg.tostring()
 END FUNCTION
 --------------------------------------------------------------------------------
-FUNCTION wc_setProp(id SMALLINT, l_prop STRING, l_val STRING)
+PRIVATE FUNCTION _setMonthCombo(id SMALLINT)
+	DEFINE x SMALLINT
+	IF m_month_combo THEN RETURN END IF
+	IF calendars[id].month_names.getLength() = 0 THEN
+		FOR x = 1 TO 12
+			LET calendars[id].month_names[x] = month_fullName_int(x)
+		END FOR
+	END IF
+
+	LET m_month_combo = TRUE
+
+	FOR x = 1 TO 12
+		DISPLAY x,":",calendars[id].month_names[x]
+		CALL wc_setProp(id, "month"||(x USING "&&"), calendars[id].month_names[x])
+	END FOR
+
+END FUNCTION
+--------------------------------------------------------------------------------
+PRIVATE FUNCTION wc_setProp(id SMALLINT, l_prop STRING, l_val STRING)
 	DEFINE l_n_pd, l_n_p om.DomNode
 	DEFINE l_nl om.NodeList
 	DEFINE l_tagName STRING

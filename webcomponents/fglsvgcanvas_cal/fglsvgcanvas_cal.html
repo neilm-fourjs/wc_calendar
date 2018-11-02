@@ -80,6 +80,30 @@ onICHostReady = function(version) {
 		if (wc_props.hasOwnProperty("month")) {
 			var mn = document.getElementById("disp_month");
 			mn.value = wc_props.month;
+			mn.options[0].value = 1;
+			mn.options[0].text = wc_props.month01;
+			mn.options[1].value = 2;
+			mn.options[1].text = wc_props.month02;
+			mn.options[2].value = 3;
+			mn.options[2].text = wc_props.month03;
+			mn.options[3].value = 4;
+			mn.options[3].text = wc_props.month04;
+			mn.options[4].value = 5;
+			mn.options[4].text = wc_props.month05;
+			mn.options[5].value = 6;
+			mn.options[5].text = wc_props.month06;
+			mn.options[6].value = 7;
+			mn.options[6].text = wc_props.month07;
+			mn.options[7].value = 8;
+			mn.options[7].text = wc_props.month08;
+			mn.options[8].value = 9;
+			mn.options[8].text = wc_props.month09;
+			mn.options[9].value = 10;
+			mn.options[9].text = wc_props.month10;
+			mn.options[10].value = 11;
+			mn.options[10].text = wc_props.month11;
+			mn.options[11].value = 12;
+			mn.options[11].text = wc_props.month12;
 		}
 	}
 
@@ -236,18 +260,18 @@ elem_mouse_out = function(element) {
 <div align="center">
 <button onclick="send_action('prevmonth')"><i class="fa fa-arrow-circle-left" style="font-size:1.5em;"></i></button>
 <select id="disp_month" name="month" style="font-size:1.5em;" onchange="setProps()">
-	<option value="1">Janúar</option>
-	<option value="2">Febrúar</option>
-	<option value="3">Mars</option>
-	<option value="4">Apríl</option>
-	<option value="5">Maí</option>
-	<option value="6">Júní</option>
-	<option value="7">Júlí</option>
-	<option value="8">Agúst</option>
-	<option value="9">September</option>
-	<option value="10">Október</option>
-	<option value="11">Nóvember</option>
-	<option value="12">Desember</option>
+	<option value="1">Jan</option>
+	<option value="2">Feb</option>
+	<option value="3">Mar</option>
+	<option value="4">Apr</option>
+	<option value="5">May</option>
+	<option value="6">Jun</option>
+	<option value="7">Jul</option>
+	<option value="8">Aug</option>
+	<option value="9">Sep</option>
+	<option value="10">Oct</option>
+	<option value="11">Nov</option>
+	<option value="12">Dec</option>
 </select>
 <input id="disp_year" type="number" min="1900" max="3000" step="1" value ="1900" style="font-size:1.5em;" onchange="setProps()"/>
 <button onclick="send_action('nextmonth')"><i class="fa fa-arrow-circle-right" style="font-size:1.5em;"></i></button>
