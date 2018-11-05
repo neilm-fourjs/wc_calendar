@@ -73,6 +73,17 @@
     <Library binaryName="etc" id="-233137040" label="etc">
       <File filePath="etc/default.4ad"/>
     </Library>
+    <Library binaryName="gas" id="-942954537" label="gas">
+      <File filePath="gas/wc_calendar.xcf"/>
+    </Library>
+    <Package binaryName="wc_calendar" label="wc_calendar" platform="Genero Application Server">
+      <DynamicProperty name="packageId" value="wc_calendar"/>
+      <DynamicProperty name="packageLabel" value="wc_calendar"/>
+      <Directory label="bin" sourceDirectory="$(ProjectDir)/bin"/>
+      <Directory destinationDirectory="$(RootDir)/etc" label="etc" sourceDirectory="$(ProjectDir)/etc"/>
+      <Directory label="gas" sourceDirectory="$(ProjectDir)/gas"/>
+      <Directory destinationDirectory="$(RootDir)/webcomponents" label="wc" sourceDirectory="$(ProjectDir)/webcomponents"/>
+    </Package>
     <Application binaryName="wc_calendar_demo" dependencies="1780538924,-233137040" id="-1099710866" label="wc_calendar_demo">
       <File filePath="src/wc_calendar_demo.4gl"/>
       <File filePath="src/wc_calendar_demo.per"/>
