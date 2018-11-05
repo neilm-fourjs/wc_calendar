@@ -67,7 +67,7 @@ DIALOG calendar()
 		--	CALL DIALOG.nextField("xxx")
 
 		ON ACTION prevmonth
-			DISPLAY "PrevMonth"
+			DISPLAY "PrevMonth Current - Year: ", rec.curr_year, " Month:",rec.curr_month
 			IF rec.curr_month = 1 THEN
 				LET rec.curr_year = rec.curr_year-1
 				LET rec.curr_month = 12
@@ -77,7 +77,7 @@ DIALOG calendar()
 			CALL fglcalendar.display(cid, rec.curr_year, rec.curr_month)
 
 		ON ACTION nextmonth
-			DISPLAY "NextMonth"
+			DISPLAY "NextMonth Current - Year: ", rec.curr_year, " Month:",rec.curr_month
 			IF rec.curr_month = 12 THEN
 				LET rec.curr_year = rec.curr_year+1
 				LET rec.curr_month = 1

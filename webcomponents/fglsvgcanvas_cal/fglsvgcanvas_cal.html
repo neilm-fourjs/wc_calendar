@@ -109,6 +109,7 @@ onICHostReady = function(version) {
 
 	gICAPI.onFocus = function(polarity) {
 		if ( polarity && clicked ) {
+			//alert('onFocus');
 			clicked = false;
 			gICAPI.SetData(JSON.stringify(value));
 			gICAPI.Action(wc_props.selection);
@@ -146,11 +147,17 @@ function setProps()
 
 function send_action(l_action)
 {
-	if (!has_focus) {
+	if (wc_props.mouse_over) {
+		mo_clear_timer();
+	}
+	wc_props.selection = l_action;
+	if (has_focus) {
+		gICAPI.SetData(JSON.stringify(value));
+		gICAPI.Action(wc_props.selection);
+	} else {
 		clicked = true;
 		gICAPI.SetFocus();
 	}
-	gICAPI.Action(l_action);
 }
 
 function getBBox(id) {
