@@ -1,5 +1,5 @@
 
-IMPORT FGL calendar
+IMPORT FGL wc_calendar
 CONSTANT C_LANG = "IS" -- "EN"
 DEFINE m_selected_date DATE
 MAIN
@@ -13,13 +13,13 @@ MAIN
 	DISPLAY "DEBUG:",l_debug
 
 	LET m_selected_date = TODAY
-	CALL calendar.init( m_selected_date, FUNCTION set_date, C_LANG ) -- Start
+	CALL wc_calendar.init( m_selected_date, FUNCTION set_date, C_LANG ) -- Start
 	DIALOG ATTRIBUTES(UNBUFFERED)
 
 		INPUT BY NAME m_selected_date ATTRIBUTES(WITHOUT DEFAULTS)
 		END INPUT
 
-		SUBDIALOG calendar.calendar
+		SUBDIALOG wc_calendar.calendar
 
 		ON ACTION cancel EXIT DIALOG
 		ON ACTION close EXIT DIALOG
@@ -29,7 +29,7 @@ MAIN
 		BEFORE DIALOG
 			IF l_debug IS NULL THEN CALL DIALOG.setActionHidden("wc_debug",TRUE) END IF
 	END DIALOG 
-	CALL calendar.finish() -- Complete
+	CALL wc_calendar.finish() -- Complete
 END MAIN
 --------------------------------------------------------------------------------
 FUNCTION set_date(l_dte DATE) -- Call back function for getting selected date.
