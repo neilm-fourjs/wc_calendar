@@ -121,7 +121,20 @@ PRIVATE FUNCTION set_type(c_id SMALLINT, type SMALLINT)
 				CALL wc_fglsvgcalendar.setDayNames(cid, "M|Þ|M|F|F|L|S")
 			END IF
 			CALL wc_fglsvgcalendar.setMonthNames(cid, "Janúar|Febrúar|Mars|Apríl|Maí|Júní|Júlí|Agúst|September|Október|Nóvember|Desember")
-
+		WHEN "ES"
+			IF  type = FGLCALENDAR_TYPE_DEFAULT THEN
+				CALL wc_fglsvgcalendar.setDayNames(cid, "Lun|Mar|Mie|Jue|Vie|Sab|Dom")
+			ELSE
+				CALL wc_fglsvgcalendar.setDayNames(cid, "L|M|M|J|V|S|D")
+			END IF
+			CALL wc_fglsvgcalendar.setMonthNames(cid, "Enero|Febrero|Marzo|Abril|Mayo|Junio|Julio|Agosto|Septiembre|Octubre|Noviembre|Diciembre")
+		WHEN "PT"
+			IF  type = FGLCALENDAR_TYPE_DEFAULT THEN
+				CALL wc_fglsvgcalendar.setDayNames(cid, "Seg|Ter|Qua|Qui|Sex|Sáb|Dom")
+			ELSE
+				CALL wc_fglsvgcalendar.setDayNames(cid, "S|T|Q|Q|S|S|D")
+			END IF
+			CALL wc_fglsvgcalendar.setMonthNames(cid, "Janeiro|Fevereiro|Março|Abril|Maio|Junho|Julho|Agosto|Setembro|Outubro|Novembro|Dezembro")
 	END CASE
 END FUNCTION
 --------------------------------------------------------------------------------

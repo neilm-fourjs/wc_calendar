@@ -1,6 +1,6 @@
 
 IMPORT FGL wc_calendar
-CONSTANT C_LANG = "EN" --"IS"
+CONSTANT C_LANG = "xx" --"IS" --"EN"
 DEFINE m_selected_date DATE
 MAIN
 	DEFINE l_debug STRING
@@ -11,7 +11,7 @@ MAIN
 -- Is the WC debug feature enabled?
 	CALL ui.Interface.frontCall("standard","getenv",["QTWEBENGINE_REMOTE_DEBUGGING"],l_debug)
 	DISPLAY "DEBUG:",l_debug
-
+	DISPLAY fgl_getEnv("LANG") TO lang
 	LET m_selected_date = TODAY
 	CALL wc_calendar.init( m_selected_date, FUNCTION set_date, C_LANG ) -- Start
 	DIALOG ATTRIBUTES(UNBUFFERED)

@@ -63,7 +63,7 @@
   </Settings>
   <LanguageList version="1.0"/>
   <PlatformList version="1.0"/>
-  <Group environment="value:LANG=en_GB.utf-8,value:FGLRESOURCEPATH=../etc,value:FGLIMAGEPATH=..:$(FGLDIR)/lib/image2font.txt" label="calendar" language="Genero">
+  <Group environment="value:LANG_en=en_GB.utf-8,value:LANG=es_ES.utf-8,value:FGLRESOURCEPATH=../etc,value:FGLIMAGEPATH=..:$(FGLDIR)/lib/image2font.txt" label="calendar" language="Genero">
     <Library binaryName="calendar" dependencies="-233137040" id="1780538924" label="calendar">
       <File filePath="src/wc_calendar.4gl"/>
       <File filePath="src/wc_calendar.per"/>

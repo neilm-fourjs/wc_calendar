@@ -16,6 +16,7 @@ END FUNCTION
 --------------------------------------------------------------------------------
 --
 FUNCTION month_fullName( dt DATETIME YEAR TO DAY )
+	DISPLAY "DT:",dt," ",util.DateTime.format(dt,"%B")
 	RETURN util.DateTime.format(dt,"%B")
 END FUNCTION
 --------------------------------------------------------------------------------

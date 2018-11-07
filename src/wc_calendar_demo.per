@@ -3,7 +3,7 @@ LAYOUT ( TEXT="WC Calendar Demo" )
 VBOX
 GRID
 {
-Date Selected:[d          ]
+Date Selected:[d          ] Lang:[lang           ]
 [""]
 }
 END -- GRID
@@ -14,3 +14,4 @@ END -- VBOX
 
 ATTRIBUTES
 DATEEDIT d = FORMONLY.m_selected_date TYPE DATE;
+lang = FORMONLY.lang;
