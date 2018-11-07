@@ -1,6 +1,6 @@
 
 IMPORT FGL wc_calendar
-CONSTANT C_LANG = "IS" -- "EN"
+CONSTANT C_LANG = "EN" --"IS"
 DEFINE m_selected_date DATE
 MAIN
 	DEFINE l_debug STRING
